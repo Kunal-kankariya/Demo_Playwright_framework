@@ -1,12 +1,13 @@
-name: E2E Tests
+name: Regression Test Suite
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+  schedule:
+    - cron: '0 0 * * *' # Runs daily at midnight UTC
+  workflow_dispatch: # Allows manual triggering
+
+permissions:
+  actions: read
+  contents: read
 
 jobs:
   test:
