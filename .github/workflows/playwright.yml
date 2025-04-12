@@ -1,4 +1,4 @@
-name: Playwright Tests
+name: E2E Tests
 
 on:
   push:
@@ -10,7 +10,7 @@ on:
 
 jobs:
   test:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
       # Step 1: Checkout the code
@@ -23,22 +23,49 @@ jobs:
         with:
           node-version: 18
 
-      # Step 3: Install dependencies
-      - name: Install dependencies
-        run: npm install
+      # Step 3: Clean and install dependencies
+      - name: Clean install dependencies
+        run: |
+          rm -rf node_modules
+          rm -f package-lock.json
+          npm cache clean --force
+          npm install --force
 
       # Step 4: Install Playwright Browsers
       - name: Install Playwright browsers
-        run: npx playwright install
+        run: npx playwright install --with-deps
 
-      # Step 5: Run Tests
+      # Step 5: Run ESLint
+      - name: Run ESLint and auto-fix issues
+        run: npm run lint
+
+      # Step 6: Run Playwright tests
       - name: Run Playwright tests
         run: npx playwright test
 
-      # Step 6 (Optional): Upload test report
-      - name: Upload Playwright report
+      # Step 7: Upload Playwright Report
+      - name: Upload Playwright Report
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: playwright-report
-          path: playwright-report
+          path: playwright-report/
+          retention-days: 1
+
+      # Step 8: Upload JUnit Report (if you're generating it)
+      - name: Upload JUnit Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: junit-results
+          path: test-results/results.xml
+          retention-days: 1
+
+      # Step 9: Upload Coverage Report (if you generate coverage)
+      - name: Upload Coverage Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/
+          retention-days: 1

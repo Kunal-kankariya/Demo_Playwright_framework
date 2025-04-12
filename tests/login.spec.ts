@@ -1,11 +1,11 @@
 import {test, expect} from '@playwright/test';
 import { logIn } from '../utils/common';
-const testData = require('../utils/testData');
+import {testData} from '../utils/testData';
 
 test('valid login', async ({ page }) => {
    const { validUser } = testData.credentials;
    await logIn(page, validUser.username, validUser.password);
-   await expect(page).toHaveURL('https://demoqa.com/profile');
+   await expect(page).toHaveURL('/profile');
 });
 
 test('invalid login', async ({ page }) => {
