@@ -1,4 +1,4 @@
-const testData = {
+export const testData = {
     urls: {
         home: 'https://demoqa.com/login',
         login: 'https://demoqa.com/login',
@@ -8,5 +8,3 @@ const testData = {
         invalidUser: { username: 'user2', password: 'wrongpass' },
     },
 };
-
-module.exports = testData;
